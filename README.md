@@ -5,6 +5,8 @@
 > This is work in progress and likely not maintained. It is mostly untested in
 > real projects. It's here, so I can test it in real projects.
 
+[![Elixir CI](https://github.com/graupe/axent/actions/workflows/elixir.yml/badge.svg)](https://github.com/graupe/axent/actions/workflows/elixir.yml)
+
 Axent contains some syntactic/grammatical extensions for Elixir. Opposed to
 some other packages that provide similar functionality, this package actually
 overrides core syntactic elements.
@@ -38,14 +40,7 @@ defmodule SomeModule do
   use Axent
   def some_function(arg) do
     {:ok, value} <- external_function(arg)
-    arg =
-        if value > 7 do
-          value
-        else
-          333
-        end
-    v = more_function_calling(:arg, arg)
-    {:ok, value} <- more_function(v)
+    {:ok, value} <- more_function(value)
     value
   else
     {:error, reason} -> {:error, reason}
