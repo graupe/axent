@@ -1,7 +1,6 @@
 defmodule AxentDef do
   @moduledoc """
-  Extends the Elixir `def` macro to support `<-` assigments on the top-level
-  do-block.
+  Provides a `def` macro with extended features over the `Kernel.def` macro.
   """
 
   defmacro __using__(_opts) do
@@ -12,17 +11,23 @@ defmodule AxentDef do
   end
 
   @doc ~S"""
+  Extends the Elixir `def` macro to support `<-` assigments on the top-level
+  do-block.
+
   ## Examples
+
+  The following
   ```elixir
   defmodule TestModule do
     def some_function do
       data when is_binary(data) <- IO.read(:eof)
-      computed_data = compute(data)
-      computed_data = if length(computed_data) > 3 do
-        {:error, :too_long}
-      else
-        computed_data
-      end
+      computed_data =
+        if length(data) > 3 do
+          {:error, :too_long}
+        else
+          computed_data
+        end
+      some_unrelated_call(computed_data)
       {:ok, value} <- Sketchy.IO.call(computed_data)
       value
     else
@@ -31,6 +36,26 @@ defmodule AxentDef do
         Logger.warning("Sketchy IO call failed: #{inspect(reason}")
         ""
       :eof -> ""
+    end
+  end
+  ```
+
+  gets translated to
+  ```elixir
+  defmodule TestModule do
+    def some_function do
+      with data when is_binary(data) <- IO.read(:eof),
+          computed_data = if(length(data) > 3, do: {:error, :too_long}, else: computed_data),
+          some_unrelated_call(computed_data),
+          {:ok, value} <- Sketchy.IO.call(computed_data) do
+        value
+      else
+        {:error, reason} ->
+          require Logger
+          Logger.warning("Sketchy IO call failed: #{inspect(reason}")
+          ""
+        :eof -> ""
+      end
     end
   end
   ```

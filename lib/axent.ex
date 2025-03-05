@@ -10,6 +10,22 @@ defmodule Axent do
   overrides core syntactic elements.
 
   Axent is a personal experiment.
+
+  Use it in your project by adding it to your `mix.exs` dependencies
+  ```elixir
+  def deps do
+    [
+      {:axent, github: "graupe/axent"}
+    ]
+  end
+  ```
+  and invoking it in your modules of choice
+  ```elixir
+  defmodule SomeModule do
+    use Axent
+    ...
+  end
+  ```
   """
 
   defmacro __using__(_opts) do
