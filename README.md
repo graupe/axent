@@ -1,6 +1,7 @@
 # Axent
 
-> [!WARNING]  
+> [!WARNING]
+>
 > This is work in progress and likely not maintained. It is mostly untested in
 > real projects. It's here, so I can test it in real projects.
 
@@ -12,7 +13,7 @@ Axent is a personal experiment.
 
 ## Installation
 
-Axent is [>available on github](https://github.com/graupe/axent) and can be installed
+Axent is [available on github](https://github.com/graupe/axent) and can be installed
 by adding `axent` to your list of dependencies in `mix.exs`:
 
 ```elixir
@@ -22,6 +23,8 @@ def deps do
   ]
 end
 ```
+
+<!--MODDOC_START-->
 
 ## Features
 
