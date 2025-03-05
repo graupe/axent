@@ -19,9 +19,9 @@ defmodule Venom.MixProject do
   defp docs do
     [
       # The main page in the docs
-      main: "Axent",
+      main: "Axent"
       # logo: "path/to/logo.png",
-      extras: ["README.md"]
+      # extras: ["README.md"]
     ]
   end
 

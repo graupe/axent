@@ -11,10 +11,13 @@ defmodule AxentStruct do
   defp parse_field_def(spec), do: parse_field_def({:\\, [], [spec, :__axent_forced_key__]})
 
   @doc ~S"""
-  Extends the `Kernel.defstruct` macro to support typed notation similar to that of Algae. The implementation is largely compatible with the native `Kernel.defstruct`
+  Extends the `Kernel.defstruct` macro to support typed notation similar to
+  that of Algae. The implementation is largely compatible with the native
+  `Kernel.defstruct`
 
   ## Example
 
+  The following
   ```elixir
    defmodule Elixir.TestStruct do
      use AxentStruct
@@ -26,7 +29,7 @@ defmodule AxentStruct do
    end
   ```
 
-  Is the same as:
+  gets translated to
   ```elixir
    defmodule Elixir.TestStruct do
      @type t :: %__MODULE__{
@@ -34,7 +37,11 @@ defmodule AxentStruct do
                   some_field: binary(),
                   enforced_field: term()
                 }
-     defstruct [:another_field, :enfoced_field, some_field: "default_value"]
+     defstruct [
+       :another_field,
+       :enfoced_field,
+       some_field: "default_value"
+     ]
      @enforce_keys [:enforced_field]
    end
    ```
