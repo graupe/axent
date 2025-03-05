@@ -1,7 +1,6 @@
 defmodule Axent do
-  @moduledoc """
-  Documentation for `Axent`.
-  """
+  @external_resource "README.md"
+  @moduledoc File.read!("README.md")
 
   defmacro __using__(_opts) do
     quote do
