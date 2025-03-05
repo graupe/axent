@@ -4,14 +4,14 @@ defmodule Venom.MixProject do
   def project do
     [
       app: :axent,
-      version: "0.0.0",
+      version: "0.999.0",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # Docs
       name: "Axent",
       source_url: "https://github.com/graupe/axent",
-      # homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
+      homepage_url: "https://github.com/graupe/axent",
       docs: &docs/0
     ]
   end

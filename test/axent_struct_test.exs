@@ -15,7 +15,7 @@ defmodule AxentStructTest do
 
   defmodule LegacyStruct do
     use Axent
-    defstruct [:name, some_default: "mehehe"]
+    defstruct [:name, some_default: "some_value"]
   end
 
   describe "axent defstruct implementation" do
@@ -44,7 +44,7 @@ defmodule AxentStructTest do
 
   describe "is mostly compatible to Kernel.defstruct" do
     test "Still works with regular `defstruct` notation" do
-      assert struct!(LegacyStruct) == %LegacyStruct{name: nil, some_default: "mehehe"}
+      assert struct!(LegacyStruct) == %LegacyStruct{name: nil, some_default: "some_value"}
     end
   end
 end
