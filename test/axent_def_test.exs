@@ -15,7 +15,6 @@ defmodule AxentDefTest do
 
   @test_ok ~S"""
       defmodule AxentDefTest.Test do
-        @compile {:ignore_module_conflict, true}
         use AxentDef
 
         def test_ok do
@@ -28,7 +27,6 @@ defmodule AxentDefTest do
   """
   @test_ok_with_warning ~S"""
       defmodule AxentDefTest.Test do
-        @compile {:ignore_module_conflict, true}
         use AxentDef
 
         def test_warning_ok do
@@ -40,7 +38,6 @@ defmodule AxentDefTest do
   """
   @test_error ~S"""
       defmodule AxentDefTest.Test do
-        @compile {:ignore_module_conflict, true}
         use AxentDef
 
         def test_error do
@@ -53,7 +50,6 @@ defmodule AxentDefTest do
   """
   @test_normal_def ~S"""
     defmodule AxentDefTest.Test do
-      @compile {:ignore_module_conflict, true}
       use AxentDef
       def normal_fn, do: :original
 
