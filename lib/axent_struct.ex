@@ -15,26 +15,29 @@ defmodule AxentStruct do
 
   ## Example
 
-  iex> defmodule Elixir.TestStruct do
-  ...>   use AxentStruct
-  ...>   defstruct do
-  ...>     enforced_field :: term()
-  ...>     another_field :: any() \\ nil
-  ...>     some_field :: binary() \\ "default_value"
-  ...>   end
-  ...> end
+  ```elixir
+   defmodule Elixir.TestStruct do
+     use AxentStruct
+     defstruct do
+       enforced_field :: term()
+       another_field :: any() \\ nil
+       some_field :: binary() \\ "default_value"
+     end
+   end
+  ```
 
   Is the same as:
-
-  iex> defmodule Elixir.TestStruct do
-  ...>   @type t :: %__MODULE__{
-  ...>                another_field: any(),
-  ...>                some_field: binary(),
-  ...>                enforced_field: term()
-  ...>              }
-  ...>   defstruct [:another_field, :enfoced_field, some_field: "default_value"]
-  ...>   @enforce_keys [:enforced_field]
-  ...> end
+  ```elixir
+   defmodule Elixir.TestStruct do
+     @type t :: %__MODULE__{
+                  another_field: any(),
+                  some_field: binary(),
+                  enforced_field: term()
+                }
+     defstruct [:another_field, :enfoced_field, some_field: "default_value"]
+     @enforce_keys [:enforced_field]
+   end
+   ```
   """
   defmacro defstruct(do: [{:->, _meta, [args, field_defs]}]) do
     quote do
