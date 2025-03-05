@@ -1,5 +1,9 @@
 # Axent
 
+> [!WARNING]  
+> This is work in progress and likely not maintained. It is mostly untested in
+> real projects. It's here, so I can test it in real projects.
+
 Axent contains some syntactic/grammatical extensions for Elixir. Opposed to
 some other packages that provide similar functionality, this package actually
 overrides core syntactic elements.
@@ -22,6 +26,8 @@ end
 ## Features
 
 ### Function definition (`def`) with top-level `with`
+
+For now, a function like this statically returns `:ok` on a happy-path. Remains a to-do.
 
 ```elixir
 defmodule SomeModule do
