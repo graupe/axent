@@ -5,8 +5,8 @@ defmodule AxentDef do
 
   defmacro __using__(_opts) do
     quote do
-      import Kernel, except: [def: 2]
-      import AxentDef, only: [def: 2]
+      import Kernel, except: [def: 2, defp: 2]
+      import AxentDef, only: [def: 2, defp: 2]
     end
   end
 
@@ -61,36 +61,51 @@ defmodule AxentDef do
   ```
   """
   defmacro def(definition, opts) do
+    opts = def_opts(opts, __CALLER__)
+
+    quote do
+      Kernel.def(unquote(definition), unquote(opts))
+    end
+  end
+
+  defmacro defp(definition, opts) do
+    opts = def_opts(opts, __CALLER__)
+
+    quote do
+      Kernel.defp(unquote(definition), unquote(opts))
+    end
+  end
+
+  defp def_opts(opts, caller) do
     if not Keyword.has_key?(opts, :do) or not has_axent?(opts[:do]) do
-      # regular `def`
-      quote do
-        Kernel.def(unquote(definition), unquote(opts))
-      end
+      opts
     else
-      deny_block(opts, :catch, __CALLER__)
-      deny_block(opts, :rescue, __CALLER__)
+      deny_block(opts, :catch, caller)
+      deny_block(opts, :rescue, caller)
 
       {result, clauses} = extract_do(opts[:do])
 
-      deny_implicit_results(result, __CALLER__)
+      deny_implicit_results(result, caller)
 
-      else_clauses =
-        if Keyword.has_key?(opts, :else) do
-          opts[:else]
-        else
-          quote do
-            unmatched -> unmatched
-          end
-        end
-
-      quote do
-        Kernel.def unquote(definition) do
+      with_block =
+        quote do
           with unquote_splicing(clauses) do
             unquote(result)
           else
-            unquote(else_clauses)
+            unquote(else_clauses(opts))
           end
         end
+
+      [do: with_block]
+    end
+  end
+
+  defp else_clauses(opts) do
+    if Keyword.has_key?(opts, :else) do
+      opts[:else]
+    else
+      quote do
+        unmatched -> unmatched
       end
     end
   end
