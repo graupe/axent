@@ -26,6 +26,20 @@ defmodule AxentDefTest do
         end
       end
   """
+  @test_ok_private ~S"""
+      defmodule AxentDefTest.Test do
+        use AxentDef
+
+        def test, do: testp()
+
+        defp testp do
+          {:ok, value} <- {:ok, :some_value}
+          value
+        else
+          _ -> :error
+        end
+      end
+  """
 
   @test_ok_complex_result ~S"""
       defmodule AxentDefTest.Test do
@@ -147,6 +161,11 @@ defmodule AxentDefTest do
   describe "Axent extended behaviour" do
     test "axent def" do
       Code.compile_string(@test_ok)
+      assert AxentDefTest.Test.test() == :some_value
+    end
+
+    test "axent defp" do
+      Code.compile_string(@test_ok_private)
       assert AxentDefTest.Test.test() == :some_value
     end
 
