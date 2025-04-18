@@ -21,7 +21,7 @@ by adding `axent` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:axent, github: "graupe/axent"}
+    {:axent, github: "graupe/axent", runtime: false}
   ]
 end
 ```
