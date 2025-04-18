@@ -40,9 +40,10 @@ defmodule SomeModule do
   use Axent
   def some_function(arg) do
     {:ok, value} <- external_function(arg)
-    {:ok, value} <- more_function(value)
+    {:ok, value} <- more_function(value) \\ :morefu
     value
   else
+    {:morefu, {:error, reason}} -> {}
     {:error, reason} -> {:error, reason}
   end
 end
@@ -54,18 +55,54 @@ Define a struct, and it's type in one go. This is similar to [Algae
 defdata](https://hexdocs.pm/algae/Algae.html#defdata/1) but using
 `defstruct` and none of the algebraic data type stuff. In addition, this code
 is not tested thoroughly, yet. Also, the struct type is always `t()` without
-any type
-arguments.
+any type arguments.
 
 Notable is, that any field, that doesn't have a default value, will be part of
 `@enforce_keys`. Defaults are denoted by a `\\` at the end of a field definition.
 
 ```elixir
-defmodule AStruct do
+defmodule SomeStruct do
   use Axent
   defstruct do
     id :: non_neg_integer()
     name :: binary() | nil \\ nil
   end
+end
+```
+
+## Special forms
+
+These adaptations require that the AST (Abstract-Syntax-Tree) is rewritten,
+before they are further evaluated by the Elixir compiler. The reason is, that
+they change the grammar of `Kernel.SpecialForm` functions or macros.
+
+This requires either wrapping the code inquestion with `use Axent do :some_code
+end` or enabling Axent in the outer scope, of the current block, so that native
+language macros can be wrapped by Axent to do the rewrite on the fly. (wrapped
+macros: `defmodule/2`, `defprotocol/2`, etc)
+
+### Shortmap
+
+Similar to the other shortmap packages, but rewriting the
+standard syntax.
+
+```elixir
+use Axent do
+  aaa = 1
+  %{aaa} = %{aaa: aaa} = %{aaa}
+  1 = aaa
+  %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
+end
+```
+
+Or for implicit use within a module:
+
+```elixir
+use Axent
+defmodule SomeModule do
+  aaa = 1
+  %{aaa} = %{aaa: aaa} = %{aaa}
+  1 = aaa
+  %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
 end
 ```

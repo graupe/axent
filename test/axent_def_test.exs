@@ -1,5 +1,5 @@
 defmodule AxentDefTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   doctest AxentDef, import: true
   # the module is only created within the test
   @compile {:no_warn_undefined, [AxentDefTest.Test]}
@@ -63,11 +63,12 @@ defmodule AxentDefTest do
 
         def test do
           {:ok, value} <- {:ok, 4}
-          value = if value > 3 do
-            :too_large
-          else
-            value
-          end
+          value =
+            if value > 3 do
+              :too_large
+            else
+              value
+            end
           value
         else
           _ -> :error
@@ -128,11 +129,25 @@ defmodule AxentDefTest do
       defmodule AxentDefTest.Test do
         use AxentDef
 
-        def test do
-          {:ok, value} <- {:error, {:some_reason, "message"}}
+        def test(input) do
+          {:ok, value} <- input
           value
         else
           _ -> :error
+        end
+      end
+  """
+  @test_error_with_reference ~S"""
+      defmodule AxentDefTest.Test do
+        use AxentDef
+
+        def test(first, second) do
+          {:ok, value1} <- first \\ :first_match
+          {:ok, value2} <- second \\ :second_match
+          {value1, value2}
+        else
+          {:first_match, {:error, reason}} -> {:error, "first match failed: #{reason}"}
+          {:second_match, {:error, reason}} -> {:error, "second match failed: #{reason}"}
         end
       end
   """
@@ -202,7 +217,21 @@ defmodule AxentDefTest do
 
     test "axent def with :error case" do
       Code.compile_string(@test_error)
-      assert AxentDefTest.Test.test() == :error
+      assert AxentDefTest.Test.test({:ok, :value}) == :value
+      assert AxentDefTest.Test.test(:not_ok) == :error
+    end
+
+    test "axent def with :error case and `\\\\` reference" do
+      Code.compile_string(@test_error_with_reference)
+
+      assert AxentDefTest.Test.test({:ok, :first_value}, {:ok, :second_value}) ==
+               {:first_value, :second_value}
+
+      assert AxentDefTest.Test.test({:ok, :first_value}, {:error, :second_reason}) ==
+               {:error, "second match failed: second_reason"}
+
+      assert AxentDefTest.Test.test({:error, :first_reason}, {:ok, :first_value}) ==
+               {:error, "first match failed: first_reason"}
     end
   end
 

@@ -28,11 +28,23 @@ defmodule Axent do
   ```
   """
 
-  defmacro __using__(_opts) do
-    quote do
-      import Kernel, except: [defstruct: 1, def: 2, defp: 2]
-      import AxentStruct, only: [defstruct: 1]
-      import AxentDef, only: [def: 2, defp: 2]
+  defmacro __using__(opts) do
+    body = Keyword.get(opts, :do, :ok)
+    if __CALLER__.module do
+      quote do
+        use AxentDefstruct
+        use AxentDef
+        use AxentMap do
+          unquote(body)
+        end
+      end
+    else
+      quote do
+        use AxentDefmodule
+        use AxentMap do
+          unquote(body)
+        end
+      end
     end
   end
 end
