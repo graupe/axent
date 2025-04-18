@@ -6,7 +6,7 @@ defmodule AxentDef do
   defmacro __using__(_opts) do
     quote do
       import Kernel, except: [def: 2, defp: 2]
-      import AxentDef, only: [def: 2, defp: 2]
+      import AxentDef
     end
   end
 
@@ -19,21 +19,24 @@ defmodule AxentDef do
   The following
   ```elixir
   defmodule TestModule do
+    require Logger
     def some_function do
       data when is_binary(data) <- IO.read(:eof)
       computed_data =
         if length(data) > 3 do
-          {:error, :too_long}
+          "default"
         else
-          computed_data
+          data
         end
       some_unrelated_call(computed_data)
-      {:ok, value} <- Sketchy.IO.call(computed_data)
+      {:ok, value} <- Sketchy.IO.call(computed_data) \\ :sketchy_call
       value
     else
+      {:sketchy_call, error} ->
+        Logger.warning("Sketchy.IO.call/1 failed: #{inspect(error}")
+        ""
       {:error, reason} ->
-        require Logger
-        Logger.warning("Sketchy IO call failed: #{inspect(reason}")
+        Logger.error("IO.read/1 error (rare): #{inspect(reason}")
         ""
       :eof -> ""
     end
@@ -43,16 +46,19 @@ defmodule AxentDef do
   gets translated to
   ```elixir
   defmodule TestModule do
+    require Logger
     def some_function do
       with data when is_binary(data) <- IO.read(:eof),
-          computed_data = if(length(data) > 3, do: {:error, :too_long}, else: computed_data),
+          computed_data = if(length(data) > 3, do: "default", else: data),
           some_unrelated_call(computed_data),
-          {:ok, value} <- Sketchy.IO.call(computed_data) do
+          {:sketchy_call, {:ok, value}} <- {:sketchy_call, Sketchy.IO.call(computed_data)} do
         value
       else
+        {:sketchy_call, error} ->
+          Logger.warning("Sketchy.IO.call failed: #{inspect(error}")
+          ""
         {:error, reason} ->
-          require Logger
-          Logger.warning("Sketchy IO call failed: #{inspect(reason}")
+          Logger.error("IO.read/1 error (rare): #{inspect(reason}")
           ""
         :eof -> ""
       end
@@ -85,11 +91,13 @@ defmodule AxentDef do
 
       {result, clauses} = extract_do(opts[:do])
 
+      prepared_clauses = apply_special_forms(clauses)
+
       deny_implicit_results(result, caller)
 
       with_block =
         quote do
-          with unquote_splicing(clauses) do
+          with unquote_splicing(prepared_clauses) do
             unquote(result)
           else
             unquote(else_clauses(opts))
@@ -110,10 +118,21 @@ defmodule AxentDef do
     end
   end
 
+  defp apply_special_forms([]), do: []
+
+  defp apply_special_forms([clause | clauses]),
+    do: [apply_special_form(clause) | apply_special_forms(clauses)]
+
+  defp apply_special_form({:\\, _meta, [{:<-, meta, [left, right]}, reference]}),
+    do: {:<-, meta, [{reference, left}, {reference, right}]}
+
+  defp apply_special_form(clause), do: clause
+
   defp extract_do({:__block__, _, expressions}), do: List.pop_at(expressions, -1)
   defp extract_do(otherwise), do: {otherwise, []}
 
   defp has_axent?({:<-, _, _}), do: true
+  defp has_axent?({:\\, _, [left, _]}), do: has_axent?(left)
   defp has_axent?({:__block__, _, nodes}), do: Enum.any?(nodes, &has_axent?/1)
   defp has_axent?(_), do: false
 
