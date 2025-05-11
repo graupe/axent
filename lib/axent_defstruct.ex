@@ -13,7 +13,6 @@ defmodule AxentDefstruct do
     end
   end
 
-
   defp parse_field_def({:\\, _, [spec, default]}), do: normalize_spec(spec, default)
   defp parse_field_def(spec), do: parse_field_def({:\\, [], [spec, :__axent_forced_key__]})
 
@@ -63,6 +62,7 @@ defmodule AxentDefstruct do
 
   defmacro defstruct(do: body) do
     {field_types, enforced_keys, defstruct_args} = parse_do_body(body)
+
     quote do
       @type t() :: %__MODULE__{unquote_splicing(field_types)}
       @enforce_keys unquote(enforced_keys)
@@ -98,6 +98,7 @@ defmodule AxentDefstruct do
       for {name, _type, :__axent_forced_key__} <- parsed do
         name
       end
+
     {field_types, enforced_keys, defstruct_args}
   end
 
