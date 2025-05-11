@@ -84,14 +84,14 @@ macros: `defmodule/2`, `defprotocol/2`, etc)
 ### Shortmap
 
 Similar to the other shortmap packages, but rewriting the
-standard syntax.
+standard syntax. The variable pinning doesn't work any more, in Elixir >= 1.8.
 
 ```elixir
 use Axent do
   aaa = 1
   %{aaa} = %{aaa: aaa} = %{aaa}
   1 = aaa
-  %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
+  # %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
 end
 ```
 
@@ -103,6 +103,6 @@ defmodule SomeModule do
   aaa = 1
   %{aaa} = %{aaa: aaa} = %{aaa}
   1 = aaa
-  %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
+  # %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
 end
 ```
