@@ -30,10 +30,12 @@ defmodule Axent do
 
   defmacro __using__(opts) do
     body = Keyword.get(opts, :do, :ok)
+
     if __CALLER__.module do
       quote do
         use AxentDefstruct
         use AxentDef
+
         use AxentMap do
           unquote(body)
         end
@@ -41,6 +43,7 @@ defmodule Axent do
     else
       quote do
         use AxentDefmodule
+
         use AxentMap do
           unquote(body)
         end

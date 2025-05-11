@@ -8,7 +8,7 @@ defmodule AxentDefstructTest do
       :code.purge(module)
       :code.delete(module)
     end
-    
+
     :ok
   end
 
@@ -46,7 +46,9 @@ defmodule AxentDefstructTest do
   describe "axent defstruct implementation" do
     test "generates valid struct with defaults" do
       Code.compile_string(@axent_struct)
-      assert inspect(struct!(SampleStruct, age: 25, email: nil)) =~ ~S(%SampleStruct{username: "anon", age: 25, email: nil})
+
+      assert inspect(struct!(SampleStruct, age: 25, email: nil)) =~
+               ~S(%SampleStruct{username: "anon", age: 25, email: nil})
     end
 
     test "generates single field struct" do
@@ -63,6 +65,7 @@ defmodule AxentDefstructTest do
 
     test "enforces required fields like Kernel.struct that can be nil" do
       Code.compile_string(@axent_struct)
+
       assert_raise ArgumentError, ~r/email/, fn ->
         struct!(SampleStruct, username: "test", age: 22)
       end
@@ -74,7 +77,9 @@ defmodule AxentDefstructTest do
   describe "is mostly compatible to Kernel.defstruct" do
     test "Still works with regular `defstruct` notation" do
       Code.compile_string(@legacy_struct)
-      assert inspect(struct!(SampleStruct)) =~ ~S(%SampleStruct{name: nil, some_default: "some_value"})
+
+      assert inspect(struct!(SampleStruct)) =~
+               ~S(%SampleStruct{name: nil, some_default: "some_value"})
     end
   end
 end

@@ -4,27 +4,32 @@ defmodule AxentMapTest do
 
   describe "Axent extended behaviour" do
     test "short map, varname is keyname" do
-      assert {%{aaa: :bbb}, [aaa: :bbb]} = Code.eval_string(~S"""
-        aaa = :bbb
-        use AxentMap do
-          %{aaa}
-        end
-      """)
+      assert {%{aaa: :bbb}, [aaa: :bbb]} =
+               Code.eval_string(~S"""
+                 aaa = :bbb
+                 use AxentMap do
+                   %{aaa}
+                 end
+               """)
     end
+
     test "short map, bind var to keyname" do
-      assert {%{aaa: :bbb}, [aaa: :bbb]} = Code.eval_string(~S"""
-        use AxentMap do
-          %{aaa} = %{aaa: :bbb}
-        end
-      """)
+      assert {%{aaa: :bbb}, [aaa: :bbb]} =
+               Code.eval_string(~S"""
+                 use AxentMap do
+                   %{aaa} = %{aaa: :bbb}
+                 end
+               """)
     end
+
     test "short map, pin is keyname" do
-      assert {%{aaa: :bbb}, [aaa: :bbb]} = Code.eval_string(~S"""
-        aaa = :bbb
-        use AxentMap do
-          %{^aaa} = %{aaa: :bbb}
-        end
-      """)
+      assert {%{aaa: :bbb}, [aaa: :bbb]} =
+               Code.eval_string(~S"""
+                 aaa = :bbb
+                 use AxentMap do
+                   %{^aaa} = %{aaa: :bbb}
+                 end
+               """)
     end
   end
 
