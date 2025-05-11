@@ -1,6 +1,6 @@
 defmodule AxentMap do
   defmacro __using__(do: body) do
-    Macro.postwalk(body, &rewrite/1)
+    dbg(Macro.postwalk(body, &rewrite/1))
   end
 
   defmacro __using__(_opts) do
