@@ -1,4 +1,4 @@
-# Axent
+# `Axent`
 
 > [!WARNING]
 >
@@ -7,15 +7,15 @@
 
 [![Elixir CI](https://github.com/graupe/axent/actions/workflows/elixir.yml/badge.svg)](https://github.com/graupe/axent/actions/workflows/elixir.yml)
 
-Axent contains some syntactic/grammatical extensions for Elixir. Opposed to
+`Axent` contains some syntactic/grammatical extensions for Elixir. Opposed to
 some other packages that provide similar functionality, this package actually
 overrides core syntactic elements.
 
-Axent is a personal experiment.
+`Axent` is a personal experiment.
 
 ## Installation
 
-Axent is [available on GitHub](https://github.com/graupe/axent) and can be installed
+`Axent` is [available on GitHub](https://github.com/graupe/axent) and can be installed
 by adding `axent` to your list of dependencies in `mix.exs`:
 
 ```elixir
@@ -25,7 +25,6 @@ def deps do
   ]
 end
 ```
-
 <!--MODDOC_START-->
 
 ## Features
@@ -52,7 +51,7 @@ end
 ### Struct definition (`defstruct`) with types
 
 Define a struct, and it's type in one go. This is similar to [Algae
-defdata](https://hexdocs.pm/algae/Algae.html#defdata/1) but using
+`defdata`](https://hexdocs.pm/algae/Algae.html#defdata/1) but using
 `defstruct` and none of the algebraic data type stuff. In addition, this code
 is not tested thoroughly, yet. Also, the struct type is always `t()` without
 any type arguments.
@@ -76,21 +75,24 @@ These adaptations require that the AST (Abstract-Syntax-Tree) is rewritten,
 before they are further evaluated by the Elixir compiler. The reason is, that
 they change the grammar of `Kernel.SpecialForm` functions or macros.
 
-This requires either wrapping the code inquestion with `use Axent do :some_code
-end` or enabling Axent in the outer scope, of the current block, so that native
-language macros can be wrapped by Axent to do the rewrite on the fly. (wrapped
-macros: `defmodule/2`, `defprotocol/2`, etc)
+This requires either wrapping the code in question with `use Axent do
+:some_code end` or enabling `Axent` in the outer scope, of the current block,
+so that native language macros can be wrapped by `Axent` to do the rewrite on
+the fly. (wrapped macros: `defmodule/2`, `defprotocol/2`, etc.)
 
-### Shortmap
+### Short map
 
-Similar to the other shortmap packages, but rewriting the
-standard syntax. The variable pinning doesn't work any more, in Elixir >= 1.8.
+Similar to the other short map packages, but rewriting the
+standard syntax. The variable pinning doesn't work anymore, in Elixir 1.8 and
+above.
 
 ```elixir
 use Axent do
   aaa = 1
-  %{aaa} = %{aaa: aaa} = %{aaa}
-  1 = aaa
+  %{aaa: 1} = %{aaa}
+  %{aaa} = %{aaa: 2}
+  2 = aaa
+  # variable pinning broken
   # %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
 end
 ```
@@ -100,9 +102,6 @@ Or for implicit use within a module:
 ```elixir
 use Axent
 defmodule SomeModule do
-  aaa = 1
-  %{aaa} = %{aaa: aaa} = %{aaa}
-  1 = aaa
-  # %{^aaa} = %{aaa: ^aaa} = %{aaa: 1} = %{aaa}
+  # use short maps here
 end
 ```
