@@ -82,9 +82,9 @@ the fly. (wrapped macros: `defmodule/2`, `defprotocol/2`, etc.)
 
 ### Short map
 
-Similar to the other short map packages, but rewriting the
+~Similar to the other short map packages, but rewriting the
 standard syntax. The variable pinning doesn't work anymore, in Elixir 1.8 and
-above.
+above.~ Apparently [es6_maps](https://github.com/kzemek/es6_maps) does a better job, although it is even more invasive.
 
 ```elixir
 use Axent do
