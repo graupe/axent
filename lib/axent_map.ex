@@ -23,17 +23,22 @@ defmodule AxentMap do
   defmacro __using__(_opts) do
   end
 
+  # Rewrites map syntax in the AST to expand short-form maps.
   defp rewrite({:%{}, meta, map_args}) when is_list(map_args), do: {:%{}, meta, maxmin(map_args)}
   defp rewrite(verbatim), do: verbatim
 
+  # Recursively processes map arguments, expanding shorthand syntax.
   defp maxmin([]), do: []
 
+  # Expands pinned variable shorthand: %{^var} -> %{var: ^var}
   defp maxmin([pin = {:^, _pin_meta, [{var_name, _var_meta, context}]} | args])
        when is_atom(context),
        do: [{var_name, pin} | maxmin(args)]
 
+  # Expands variable shorthand: %{var} -> %{var: var}
   defp maxmin([var = {var_name, _meta, context} | args]) when is_atom(context),
     do: [{var_name, var} | maxmin(args)]
 
+  # Keeps standard key-value pairs as-is.
   defp maxmin([arg | args]), do: [arg | maxmin(args)]
 end

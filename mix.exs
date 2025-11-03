@@ -8,11 +8,27 @@ defmodule Axent.MixProject do
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      description: description(),
+      package: package(),
       # Docs
       name: "Axent",
       source_url: "https://github.com/graupe/axent",
       homepage_url: "https://github.com/graupe/axent",
       docs: &docs/0
+    ]
+  end
+
+  defp description do
+    """
+    Syntactic extensions for Elixir including with-style function definitions,
+    typed struct definitions, and short map syntax.
+    """
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/graupe/axent"}
     ]
   end
 

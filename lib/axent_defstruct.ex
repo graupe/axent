@@ -17,9 +17,12 @@ defmodule AxentDefstruct do
     end
   end
 
+  # Parses a field definition with or without a default value.
+  # Fields without defaults are marked with :__axent_forced_key__ for later processing.
   defp parse_field_def({:\\, _, [spec, default]}), do: normalize_spec(spec, default)
   defp parse_field_def(spec), do: parse_field_def({:\\, [], [spec, :__axent_forced_key__]})
 
+  # Normalizes a type specification into a {name, type, default} tuple.
   defp normalize_spec({:"::", _, [{name, _, nil}, type]}, default), do: {name, type, default}
 
   @doc ~S"""
@@ -78,6 +81,10 @@ defmodule AxentDefstruct do
     quote do: Kernel.defstruct(unquote(fields))
   end
 
+  # Parses the do-block body containing field definitions and extracts:
+  # - field_types: list of {name, type} tuples for @type
+  # - enforced_keys: list of field names without defaults
+  # - defstruct_args: list of fields with their default values for Kernel.defstruct
   defp parse_do_body({:__block__, _meta, field_defs}) do
     parsed =
       for field_def <- field_defs do

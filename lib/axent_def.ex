@@ -82,6 +82,9 @@ defmodule AxentDef do
     end
   end
 
+  # Transforms function definition options to use `with` syntax if Axent syntax is detected.
+  # Returns the original opts if no Axent syntax is present, or transforms the do-block
+  # into a with-statement that supports the `<-` pattern matching syntax.
   defp def_opts(opts, caller) do
     if not Keyword.has_key?(opts, :do) or not has_axent?(opts[:do]) do
       opts
@@ -118,24 +121,32 @@ defmodule AxentDef do
     end
   end
 
+  # Recursively applies special form transformations to all clauses in a function body.
   defp apply_special_forms([]), do: []
 
   defp apply_special_forms([clause | clauses]),
     do: [apply_special_form(clause) | apply_special_forms(clauses)]
 
+  # Transforms `{:ok, value} <- call() \\ :reference` into a tagged tuple form
+  # that allows tracking which clause failed in the else block.
   defp apply_special_form({:\\, _meta, [{:<-, meta, [left, right]}, reference]}),
     do: {:<-, meta, [{reference, left}, {reference, right}]}
 
   defp apply_special_form(clause), do: clause
 
+  # Extracts the final result expression from a do-block, separating it from
+  # the preceding clauses. Returns {result, clauses}.
   defp extract_do({:__block__, _, expressions}), do: List.pop_at(expressions, -1)
   defp extract_do(otherwise), do: {otherwise, []}
 
+  # Checks if an AST contains Axent-specific syntax (the `<-` pattern matching operator).
   defp has_axent?({:<-, _, _}), do: true
   defp has_axent?({:\\, _, [left, _]}), do: has_axent?(left)
   defp has_axent?({:__block__, _, nodes}), do: Enum.any?(nodes, &has_axent?/1)
   defp has_axent?(_), do: false
 
+  # Raises a SyntaxError if the specified block (catch/rescue) is present alongside Axent syntax.
+  # This is necessary because Axent's `with` transformation is incompatible with these blocks.
   defp deny_block(opts, block_key, caller) do
     if Keyword.has_key?(opts, block_key) do
       meta =
@@ -153,6 +164,8 @@ defmodule AxentDef do
     end
   end
 
+  # Raises a SyntaxError if the last expression in the function body is a `<-` match.
+  # This prevents implicit nil returns from failed matches.
   defp deny_implicit_results(result, caller) do
     with {:<-, meta, _} <- result do
       raise SyntaxError,
