@@ -50,13 +50,12 @@ end
 
 ### Struct definition (`defstruct`) with types
 
-Define a struct, and it's type in one go. This is similar to [Algae
+Define a struct and its type in one go. This is similar to [Algae
 `defdata`](https://hexdocs.pm/algae/Algae.html#defdata/1) but using
-`defstruct` and none of the algebraic data type stuff. In addition, this code
-is not tested thoroughly, yet. Also, the struct type is always `t()` without
-any type arguments.
+`defstruct` without the algebraic data type features. The struct type is
+always `t()` without any type arguments.
 
-Notable is, that any field, that doesn't have a default value, will be part of
+Note that any field without a default value will be part of
 `@enforce_keys`. Defaults are denoted by a `\\` at the end of a field definition.
 
 ```elixir
@@ -71,20 +70,21 @@ end
 
 ## Special forms
 
-These adaptations require that the AST (Abstract-Syntax-Tree) is rewritten,
-before they are further evaluated by the Elixir compiler. The reason is, that
-they change the grammar of `Kernel.SpecialForm` functions or macros.
+These adaptations require that the AST (Abstract Syntax Tree) is rewritten
+before being evaluated by the Elixir compiler, as they change the grammar of
+`Kernel.SpecialForm` functions or macros.
 
-This requires either wrapping the code in question with `use Axent do
-:some_code end` or enabling `Axent` in the outer scope, of the current block,
-so that native language macros can be wrapped by `Axent` to do the rewrite on
-the fly. (wrapped macros: `defmodule/2`, `defprotocol/2`, etc.)
+This requires either wrapping the code with `use Axent do :some_code end` or
+enabling `Axent` in the outer scope of the current block, so that native
+language macros can be wrapped by `Axent` to perform the rewrite on the fly.
+(Wrapped macros include `defmodule/2`, `defprotocol/2`, etc.)
 
 ### Short map
 
-~Similar to the other short map packages, but rewriting the
-standard syntax. The variable pinning doesn't work anymore, in Elixir 1.8 and
-above.~ Apparently [es6_maps](https://github.com/kzemek/es6_maps) does a better job, although it is even more invasive.
+~Similar to other short map packages, but rewrites the standard syntax.
+Variable pinning doesn't work in Elixir 1.8 and above.~
+[es6_maps](https://github.com/kzemek/es6_maps) provides similar functionality
+with a more invasive approach.
 
 ```elixir
 use Axent do
