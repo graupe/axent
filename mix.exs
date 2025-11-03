@@ -1,4 +1,4 @@
-defmodule Venom.MixProject do
+defmodule Axent.MixProject do
   use Mix.Project
 
   def project do

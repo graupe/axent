@@ -1,4 +1,21 @@
 defmodule AxentMap do
+  @moduledoc """
+  Provides short map syntax for Elixir, similar to ES6 JavaScript object literals.
+
+  Allows using `%{var}` as shorthand for `%{var: var}`, making code more concise
+  when map keys match variable names.
+
+  ## Examples
+
+      use AxentMap do
+        name = "Alice"
+        age = 30
+        %{name, age}  # expands to %{name: name, age: age}
+      end
+
+  Note: Variable pinning with `^` is not supported in Elixir 1.8+.
+  """
+
   defmacro __using__(do: body) do
     Macro.postwalk(body, &rewrite/1)
   end

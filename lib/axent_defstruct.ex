@@ -1,8 +1,12 @@
 defmodule AxentDefstruct do
   @moduledoc """
-  Unit tests for struct definitions using `Axent.Struct.defstruct/1`.
+  Provides an extended `defstruct` macro with inline type specifications.
 
-  The implementation mirrors `Kernel.struct/2` behavior for field validation
+  This module allows defining struct fields with their types in a single,
+  concise syntax. Fields without default values are automatically added to
+  `@enforce_keys`, and a `@type t()` is generated from the field definitions.
+
+  The implementation mirrors `Kernel.defstruct/1` behavior for field validation
   while adding extended type specifications.
   """
 
