@@ -64,7 +64,7 @@ end
 defmodule SomeModule do
   def some_function(arg) do
     with {:ok, value} <- external_function(arg),
-         {:else_value_123, {:ok, value}} <- more_function(value) do
+         {:else_value_123, {:ok, value}} <- {:else_value_123, more_function(value)} do
       value
     else
       {:else_value_123, {:error, reason}} -> {}
