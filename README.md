@@ -8,8 +8,9 @@
 [![Elixir CI](https://github.com/graupe/axent/actions/workflows/elixir.yml/badge.svg)](https://github.com/graupe/axent/actions/workflows/elixir.yml)
 
 `Axent` contains some syntactic/grammatical extensions for Elixir. Opposed to
-some other packages that provide similar functionality, this package actually
-overrides core syntactic elements.
+other packages that provide some of these features, this package actually
+overrides core syntactic elements to give cleaner feel and syntactic editor
+support without special treatments.
 
 `Axent` is a personal experiment.
 
@@ -69,22 +70,21 @@ defmodule SomeStruct do
 end
 ```
 
-## Special forms
+<details>
+<summary>obsolete: Short map. Apparently [es6_maps](https://github.com/kzemek/es6_maps) does a better job (although it is even more invasive).</summary>
 
-These adaptations require that the AST (Abstract-Syntax-Tree) is rewritten,
+~These adaptations require that the AST (Abstract-Syntax-Tree) is rewritten,
 before they are further evaluated by the Elixir compiler. The reason is, that
-they change the grammar of `Kernel.SpecialForm` functions or macros.
+they change the grammar of `Kernel.SpecialForm` functions or macros.~
 
-This requires either wrapping the code in question with `use Axent do
+~This requires either wrapping the code in question with `use Axent do
 :some_code end` or enabling `Axent` in the outer scope, of the current block,
 so that native language macros can be wrapped by `Axent` to do the rewrite on
-the fly. (wrapped macros: `defmodule/2`, `defprotocol/2`, etc.)
-
-### Short map
+the fly. (wrapped macros: `defmodule/2`, `defprotocol/2`, etc.)~
 
 ~Similar to the other short map packages, but rewriting the
 standard syntax. The variable pinning doesn't work anymore, in Elixir 1.8 and
-above.~ Apparently [es6_maps](https://github.com/kzemek/es6_maps) does a better job, although it is even more invasive.
+above.~
 
 ```elixir
 use Axent do
@@ -105,3 +105,5 @@ defmodule SomeModule do
   # use short maps here
 end
 ```
+
+</details>
