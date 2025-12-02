@@ -1,10 +1,10 @@
-defmodule Venom.MixProject do
+defmodule Excentrique.MixProject do
   use Mix.Project
 
   def project do
     [
       app: :excentrique,
-      version: "0.999.0",
+      version: "1.0.0",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
