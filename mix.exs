@@ -3,15 +3,15 @@ defmodule Venom.MixProject do
 
   def project do
     [
-      app: :axent,
+      app: :excentrique,
       version: "0.999.0",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # Docs
-      name: "Axent",
-      source_url: "https://github.com/graupe/axent",
-      homepage_url: "https://github.com/graupe/axent",
+      name: "Excentrique",
+      source_url: "https://github.com/graupe/excentrique",
+      homepage_url: "https://github.com/graupe/excentrique",
       docs: &docs/0
     ]
   end
@@ -19,7 +19,7 @@ defmodule Venom.MixProject do
   defp docs do
     [
       # The main page in the docs
-      main: "Axent"
+      main: "Excentrique"
       # logo: "path/to/logo.png",
       # extras: ["README.md"]
     ]

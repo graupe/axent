@@ -1,6 +1,6 @@
-defmodule AxentDefstructTest do
+defmodule Excentrique.DefstructTest do
   use ExUnit.Case, async: true
-  doctest AxentDefstruct, import: true
+  doctest Excentrique.Defstruct, import: true
 
   setup do
     if Code.loaded?(SampleStruct) do
@@ -14,7 +14,7 @@ defmodule AxentDefstructTest do
 
   @axent_struct ~S"""
   defmodule SampleStruct do
-    use Axent
+    use Excentrique
 
     @typedoc "Test struct for validations"
     defstruct do
@@ -27,7 +27,7 @@ defmodule AxentDefstructTest do
 
   @axent_struct_one_field ~S"""
   defmodule SampleStruct do
-    use Axent
+    use Excentrique
 
     @typedoc "Test struct with a single field"
     defstruct do
@@ -38,7 +38,7 @@ defmodule AxentDefstructTest do
 
   @legacy_struct ~S"""
   defmodule SampleStruct do
-    use Axent
+    use Excentrique
     defstruct [:name, some_default: "some_value"]
   end
   """

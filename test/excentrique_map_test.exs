@@ -1,13 +1,13 @@
-defmodule AxentMapTest do
+defmodule Excentrique.MapTest do
   use ExUnit.Case, async: false
-  doctest AxentMap, import: true
+  doctest Excentrique.Map, import: true
 
-  describe "Axent extended behaviour" do
+  describe "Excentrique extended behaviour" do
     test "short map, varname is keyname" do
       assert {%{aaa: :bbb}, [aaa: :bbb]} =
                Code.eval_string(~S"""
                  aaa = :bbb
-                 use AxentMap do
+                 use Excentrique.Map do
                    %{aaa}
                  end
                """)
@@ -16,7 +16,7 @@ defmodule AxentMapTest do
     test "short map, bind var to keyname" do
       assert {%{aaa: :bbb}, [aaa: :bbb]} =
                Code.eval_string(~S"""
-                 use AxentMap do
+                 use Excentrique.Map do
                    %{aaa} = %{aaa: :bbb}
                  end
                """)
@@ -27,7 +27,7 @@ defmodule AxentMapTest do
     #      assert {%{aaa: :bbb}, [aaa: :bbb]} =
     #               Code.eval_string(~S"""
     #                 aaa = :bbb
-    #                 use AxentMap do
+    #                 use Excentrique.Map do
     #                   %{^aaa} = %{aaa: :bbb}
     #                 end
     #               """)

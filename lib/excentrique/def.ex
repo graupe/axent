@@ -1,4 +1,4 @@
-defmodule AxentDef do
+defmodule Excentrique.Def do
   @moduledoc """
   Provides a `def` macro with extended features over the `Kernel.def` macro.
   """
@@ -6,7 +6,7 @@ defmodule AxentDef do
   defmacro __using__(_opts) do
     quote do
       import Kernel, except: [def: 2, defp: 2]
-      import AxentDef
+      import Excentrique.Def
     end
   end
 
@@ -97,6 +97,7 @@ defmodule AxentDef do
 
       with_block =
         quote do
+          # credo:disable-for-next-line Credo.Check.Refactor.WithClauses
           with unquote_splicing(prepared_clauses) do
             unquote(result)
           else
@@ -146,7 +147,7 @@ defmodule AxentDef do
         end
 
       raise SyntaxError,
-        description: "Don't mix `#{block_key}` blocks and Axent syntax",
+        description: "Don't mix `#{block_key}` blocks and Excentrique syntax",
         line: meta[:line],
         column: meta[:column],
         file: caller.file

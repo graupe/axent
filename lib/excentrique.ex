@@ -1,28 +1,28 @@
-defmodule Axent do
+defmodule Excentrique do
   @moduledoc ~S"""
   > #### WARNING {: .warning}
   >
   > This is work in progress and likely not maintained. It's public on github,
   > so I can test it in real projects.
 
-  Axent contains some syntactic/grammatical extensions for Elixir. Opposed to
+  Excentrique contains some syntactic/grammatical extensions for Elixir. Opposed to
   some other packages that provide similar functionality, this package actually
   overrides core syntactic elements.
 
-  Axent is a personal experiment.
+  Excentrique is a personal experiment.
 
   Use it in your project by adding it to your `mix.exs` dependencies
   ```elixir
   def deps do
     [
-      {:axent, github: "graupe/axent"}
+      {:excentrique, github: "graupe/excentrique"}
     ]
   end
   ```
   and invoking it in your modules of choice
   ```elixir
   defmodule SomeModule do
-    use Axent
+    use Excentrique
     ...
   end
   ```
@@ -33,18 +33,18 @@ defmodule Axent do
 
     if __CALLER__.module do
       quote do
-        use AxentDefstruct
-        use AxentDef
+        use Excentrique.Defstruct
+        use Excentrique.Def
 
-        use AxentMap do
+        use Excentrique.Map do
           unquote(body)
         end
       end
     else
       quote do
-        use AxentDefmodule
+        use Excentrique.Defmodule
 
-        use AxentMap do
+        use Excentrique.Map do
           unquote(body)
         end
       end

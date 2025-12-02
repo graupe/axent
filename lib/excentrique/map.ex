@@ -1,4 +1,6 @@
-defmodule AxentMap do
+defmodule Excentrique.Map do
+  @moduledoc false
+
   defmacro __using__(do: body) do
     Macro.postwalk(body, &rewrite/1)
   end

@@ -1,8 +1,10 @@
-defmodule AxentDefmodule do
+defmodule Excentrique.Defmodule do
+  @moduledoc false
+
   defmacro __using__(_opts) do
     quote do
       import Kernel, except: [defmodule: 2]
-      import AxentDefmodule
+      import Excentrique.Defmodule
       :ok
     end
   end
@@ -10,7 +12,7 @@ defmodule AxentDefmodule do
   defmacro defmodule(module_alias, do: body) do
     quote do
       Kernel.defmodule unquote(module_alias) do
-        use Axent do
+        use Excentrique do
           unquote(body)
         end
       end

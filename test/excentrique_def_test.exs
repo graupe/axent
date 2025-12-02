@@ -1,12 +1,13 @@
-defmodule AxentDefTest do
+defmodule Excentrique.DefTest do
   use ExUnit.Case, async: false
-  doctest AxentDef, import: true
+  doctest Excentrique.Def, import: true
+
   # the module is only created within the test
-  @compile {:no_warn_undefined, [AxentDefTest.Test]}
+  @compile {:no_warn_undefined, [Test]}
 
   setup do
-    if Code.loaded?(AxentDefTest.Test) do
-      module = AxentDefTest.Test.module_info(:module)
+    if Code.loaded?(Test) do
+      module = Test.module_info(:module)
       :code.purge(module)
       :code.delete(module)
     end
@@ -15,8 +16,8 @@ defmodule AxentDefTest do
   end
 
   @test_ok ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, value} <- {:ok, :some_value}
@@ -27,8 +28,8 @@ defmodule AxentDefTest do
       end
   """
   @test_ok_private ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test, do: testp()
 
@@ -42,8 +43,8 @@ defmodule AxentDefTest do
   """
 
   @test_ok_complex_result ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, value} <- {:ok, 4}
@@ -58,8 +59,8 @@ defmodule AxentDefTest do
       end
   """
   @test_ok_complex_intermediate ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, value} <- {:ok, 4}
@@ -76,8 +77,8 @@ defmodule AxentDefTest do
       end
   """
   @test_ok_no_else ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, value} <- {:ok, :some_value}
@@ -86,8 +87,8 @@ defmodule AxentDefTest do
       end
   """
   @test_ok_with_warning ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, _value} <- {:ok, :some_value}
@@ -98,8 +99,8 @@ defmodule AxentDefTest do
   """
 
   @test_ok_with_catch_discurage ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, value} <- {:ok, :some_value}
@@ -112,8 +113,8 @@ defmodule AxentDefTest do
       end
   """
   @test_ok_with_rescue_discurage ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test do
           {:ok, _value} <- {:ok, :some_value}
@@ -126,8 +127,8 @@ defmodule AxentDefTest do
       end
   """
   @test_error ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test(input) do
           {:ok, value} <- input
@@ -138,8 +139,8 @@ defmodule AxentDefTest do
       end
   """
   @test_error_with_reference ~S"""
-      defmodule AxentDefTest.Test do
-        use AxentDef
+      defmodule Test do
+        use Excentrique.Def
 
         def test(first, second) do
           {:ok, value1} <- first \\ :first_match
@@ -152,8 +153,8 @@ defmodule AxentDefTest do
       end
   """
   @test_normal_def ~S"""
-    defmodule AxentDefTest.Test do
-      use AxentDef
+    defmodule Test do
+      use Excentrique.Def
       def normal_fn
       def normal_fn, do: :original
 
@@ -173,30 +174,30 @@ defmodule AxentDefTest do
     end
   """
 
-  describe "Axent extended behaviour" do
+  describe "Excentrique extended behaviour" do
     test "axent def" do
       Code.compile_string(@test_ok)
-      assert AxentDefTest.Test.test() == :some_value
+      assert Test.test() == :some_value
     end
 
     test "axent defp" do
       Code.compile_string(@test_ok_private)
-      assert AxentDefTest.Test.test() == :some_value
+      assert Test.test() == :some_value
     end
 
     test "axent def complex result" do
       Code.compile_string(@test_ok_complex_result)
-      assert AxentDefTest.Test.test() == :too_large
+      assert Test.test() == :too_large
     end
 
     test "axent def complex intermediate" do
       Code.compile_string(@test_ok_complex_intermediate)
-      assert AxentDefTest.Test.test() == :too_large
+      assert Test.test() == :too_large
     end
 
     test "axent def no else" do
       Code.compile_string(@test_ok_no_else)
-      assert AxentDefTest.Test.test() == :some_value
+      assert Test.test() == :some_value
     end
 
     test "axent def error on implicit nil return" do
@@ -206,31 +207,31 @@ defmodule AxentDefTest do
     end
 
     test "axent def error on `<-` with `rescue` or `catch`" do
-      assert_raise SyntaxError, ~r"Don't mix `rescue` blocks and Axent syntax", fn ->
+      assert_raise SyntaxError, ~r"Don't mix `rescue` blocks and Excentrique syntax", fn ->
         Code.compile_string(@test_ok_with_rescue_discurage)
       end
 
-      assert_raise SyntaxError, ~r"Don't mix `catch` blocks and Axent syntax", fn ->
+      assert_raise SyntaxError, ~r"Don't mix `catch` blocks and Excentrique syntax", fn ->
         Code.compile_string(@test_ok_with_catch_discurage)
       end
     end
 
     test "axent def with :error case" do
       Code.compile_string(@test_error)
-      assert AxentDefTest.Test.test({:ok, :value}) == :value
-      assert AxentDefTest.Test.test(:not_ok) == :error
+      assert Test.test({:ok, :value}) == :value
+      assert Test.test(:not_ok) == :error
     end
 
     test "axent def with :error case and `\\\\` reference" do
       Code.compile_string(@test_error_with_reference)
 
-      assert AxentDefTest.Test.test({:ok, :first_value}, {:ok, :second_value}) ==
+      assert Test.test({:ok, :first_value}, {:ok, :second_value}) ==
                {:first_value, :second_value}
 
-      assert AxentDefTest.Test.test({:ok, :first_value}, {:error, :second_reason}) ==
+      assert Test.test({:ok, :first_value}, {:error, :second_reason}) ==
                {:error, "second match failed: second_reason"}
 
-      assert AxentDefTest.Test.test({:error, :first_reason}, {:ok, :first_value}) ==
+      assert Test.test({:error, :first_reason}, {:ok, :first_value}) ==
                {:error, "first match failed: first_reason"}
     end
   end
@@ -238,9 +239,9 @@ defmodule AxentDefTest do
   describe "Kernel (default) behaviour" do
     test "standard def behavior preserved" do
       Code.compile_string(@test_normal_def)
-      assert AxentDefTest.Test.normal_fn() == :original
-      assert AxentDefTest.Test.normal_fn_with_rescue() == :error
-      assert AxentDefTest.Test.normal_fn_with_rescue_and_catch() == :caught
+      assert Test.normal_fn() == :original
+      assert Test.normal_fn_with_rescue() == :error
+      assert Test.normal_fn_with_rescue_and_catch() == :caught
     end
   end
 end

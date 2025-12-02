@@ -1,6 +1,6 @@
-defmodule AxentDefstruct do
+defmodule Excentrique.Defstruct do
   @moduledoc """
-  Unit tests for struct definitions using `Axent.Struct.defstruct/1`.
+  Unit tests for struct definitions using `Excentrique.Struct.defstruct/1`.
 
   The implementation mirrors `Kernel.struct/2` behavior for field validation
   while adding extended type specifications.
@@ -9,7 +9,7 @@ defmodule AxentDefstruct do
   defmacro __using__(_args) do
     quote do
       import Kernel, except: [defstruct: 1]
-      import AxentDefstruct
+      import Excentrique.Defstruct
     end
   end
 
@@ -28,7 +28,7 @@ defmodule AxentDefstruct do
   The following
   ```elixir
    defmodule Elixir.TestStruct do
-     use AxentDefstruct
+     use Excentrique.Defstruct
      defstruct do
        enforced_field :: term()
        another_field :: any() \\ nil

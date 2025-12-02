@@ -1,28 +1,28 @@
-# `Axent`
+# `Excentrique`
 
 > [!WARNING]
 >
 > This is work in progress and likely not maintained. It is mostly untested in
 > real projects. It's here, so I can test it in real projects.
 
-[![Elixir CI](https://github.com/graupe/axent/actions/workflows/elixir.yml/badge.svg)](https://github.com/graupe/axent/actions/workflows/elixir.yml)
+[![Elixir CI](https://github.com/graupe/excentrique/actions/workflows/elixir.yml/badge.svg)](https://github.com/graupe/excentrique/actions/workflows/elixir.yml)
 
-`Axent` contains some syntactic/grammatical extensions for Elixir. Opposed to
+`Excentrique` contains some syntactic/grammatical extensions for Elixir. Opposed to
 other packages that provide some of these features, this package actually
 overrides core syntactic elements to give cleaner feel and syntactic editor
 support without special treatments.
 
-`Axent` is a personal experiment.
+`Excentrique` is a personal experiment.
 
 ## Installation
 
-`Axent` is [available on GitHub](https://github.com/graupe/axent) and can be installed
+`Excentrique` is [available on GitHub](https://github.com/graupe/excentrique) and can be installed
 by adding `axent` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:axent, github: "graupe/axent", runtime: false}
+    {:excentrique, github: "graupe/excentrique", runtime: false}
   ]
 end
 ```
@@ -37,7 +37,7 @@ definition.
 
 ```elixir
 defmodule SomeModule do
-  use Axent
+  use Excentrique
   def some_function(arg) do
     {:ok, value} <- external_function(arg)
     {:ok, value} <- more_function(value) \\ :morefu
@@ -62,7 +62,7 @@ Notable is, that any field, that doesn't have a default value, will be part of
 
 ```elixir
 defmodule SomeStruct do
-  use Axent
+  use Excentrique
   defstruct do
     id :: non_neg_integer()
     name :: binary() | nil \\ nil
@@ -77,9 +77,9 @@ end
 before they are further evaluated by the Elixir compiler. The reason is, that
 they change the grammar of `Kernel.SpecialForm` functions or macros.~
 
-~This requires either wrapping the code in question with `use Axent do
-:some_code end` or enabling `Axent` in the outer scope, of the current block,
-so that native language macros can be wrapped by `Axent` to do the rewrite on
+~This requires either wrapping the code in question with `use Excentrique do
+:some_code end` or enabling `Excentrique` in the outer scope, of the current block,
+so that native language macros can be wrapped by `Excentrique` to do the rewrite on
 the fly. (wrapped macros: `defmodule/2`, `defprotocol/2`, etc.)~
 
 ~Similar to the other short map packages, but rewriting the
@@ -87,7 +87,7 @@ standard syntax. The variable pinning doesn't work anymore, in Elixir 1.8 and
 above.~
 
 ```elixir
-use Axent do
+use Excentrique do
   aaa = 1
   %{aaa: 1} = %{aaa}
   %{aaa} = %{aaa: 2}
@@ -100,7 +100,7 @@ end
 Or for implicit use within a module:
 
 ```elixir
-use Axent
+use Excentrique
 defmodule SomeModule do
   # use short maps here
 end
